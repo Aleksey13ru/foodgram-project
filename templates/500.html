@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <title>Ошибка 500</title>
+    <link rel="stylesheet" href="{% static './pages/form.css' %}">
+{% endblock %}
+
+{% block main %}
+    <main class="main container">
+        <div class="main__header">
+            <h1 class="main__title">Ошибка 500 :(</h1>
+            <p class="form__forgot-link">Ошибка на сервере, попробуйте обновить страницу или обратиться позже.</p>
+        </div>
+    </main>
+{% endblock %}

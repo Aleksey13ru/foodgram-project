@@ -1,0 +1,13 @@
+flake8
+pep8-naming # проверяет имена классов, функций и переменных на соответствие PEP8
+flake8-broken-line # отслеживает применение устаревших переносов (через обратный слеш \)
+flake8-return # проверяет значения, возвращаемые функциями
+flake8-isort # проверяет правильность порядка импортов
+Django==2.2.20
+pytz==2021.1
+sqlparse==0.4.1
+pillow
+sorl-thumbnail==12.7.0
+djangorestframework==3.12.4
+django-debug-toolbar~=3.2.1
+reportlab==3.5.67
