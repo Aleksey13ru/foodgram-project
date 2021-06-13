@@ -9,19 +9,30 @@ from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
-from .models import Recipe, User
+from .models import Recipe, Ingredient, IngredientRecipe, User
 from .forms import RecipeForm
 
 
 def get_tags(request):
+    """ Получаем теги """
+    all_tags = ['breakfast', 'lunch', 'dinner']
     tags = []
-    if request.GET.get('breakfast') == 'True':
-        tags.append('breakfast')
-    if request.GET.get('lunch') == 'True':
-        tags.append('lunch')
-    if request.GET.get('dinner') == 'True':
-        tags.append('dinner')
+    for tag in all_tags:
+        if request.GET.get(tag) == 'True':
+            tags.append(tag)
+    if not tags:
+        tags = all_tags
     return tags
+
+
+def get_ingredients(request):
+    """ Получаем ингредиенты"""
+    ingredients = {}
+    for key, name in request.POST.items():
+        if 'nameIngredient' in key:
+            _ = key.split('_')
+            ingredients[name] = int(request.POST[f'valueIngredient_{_[1]}'])
+    return ingredients
 
 
 def index(request):
@@ -58,10 +69,18 @@ def profile(request, username):
 def new_recipe(request):
     """Функция для создания рецепта"""
     form = RecipeForm(request.POST or None, files=request.FILES or None)
+    ingredients = get_ingredients(request)
     if form.is_valid():
         recipe = form.save(commit=False)
         recipe.author = request.user
-        form.save()
+        recipe.save()
+        for title, value in ingredients.items():
+            ingredient = get_object_or_404(Ingredient, title=title)
+            ingredient_recipe = IngredientRecipe(recipe=recipe,
+                                                 ingredient=ingredient,
+                                                 value=value)
+            ingredient_recipe.save()
+        form.save_m2m()
         return redirect('index')
     return render(request, 'recipes/formRecipe.html', {'form': form})
 
@@ -77,17 +96,25 @@ def recipe_view(request, username, recipe_id):
 @login_required
 def recipe_edit(request, username, recipe_id):
     """Функция для редактирования рецепта"""
-    # post = get_object_or_404(Post, id=post_id, author__username=username)
-    # if request.user != post.author:
-    #     return redirect('index')
-    # form = PostForm(request.POST or None,
-    #                 files=request.FILES or None,
-    #                 instance=post)
-    # if form.is_valid():
-    #     post = form.save()
-    #     return redirect('post', username=request.user.username,
-    #                     post_id=post_id)
-    return render(request, 'recipe/formChangeRecipe.html')
+    recipe = get_object_or_404(Recipe, id=recipe_id, author__username=username)
+    if request.user != recipe.author:
+        return redirect('index')
+    form = RecipeForm(request.POST or None, files=request.FILES or None,
+                      instance=recipe)
+    ingredients = get_ingredients(request)
+    if form.is_valid():
+        IngredientRecipe.objects.filter(recipe=recipe).delete()
+        recipe = form.save(commit=False)
+        recipe.author = request.user
+        recipe.save()
+        for item in ingredients:
+            IngredientRecipe(recipe=recipe,
+                             ingredient=Ingredient.objects.get(title=f'{item}'),
+                             value=ingredients[item])
+        form.save_m2m()
+        return redirect('index')
+    return render(request, 'recipes/formRecipe.html', {'form': form,
+                                                       'recipe': recipe, })
 
 
 @login_required
@@ -96,7 +123,7 @@ def recipe_delete(request, username, recipe_id):
     recipe = get_object_or_404(Recipe, id=recipe_id, author__username=username)
     if request.user == recipe.author:
         recipe.delete()
-    return render(request, 'recipes/indexAuth.html')
+    return redirect('index')
 
 
 @login_required
@@ -116,7 +143,7 @@ def favorites_recipe(request):
 def my_follow(request):
     """Функция страницы, куда будут выведены авторы,
     на которых подписался текущий пользователь"""
-    my_follow_list = request.user.follow.all().order_by('-authors')
+    my_follow_list = request.user.follow.all().order_by('-authors').distinct()
     paginator = Paginator(my_follow_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)

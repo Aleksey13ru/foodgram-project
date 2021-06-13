@@ -27,18 +27,19 @@ class Recipe(models.Model):
                                verbose_name='Автор публикации (пользователь)')
     title = models.CharField(max_length=256, verbose_name='Название')
     image = models.ImageField(upload_to='recipe_image/',
-                              verbose_name='Картинка')
+                              verbose_name='Картинка', blank=True)
     description = models.TextField(verbose_name='Текстовое описание')
     ingredient = models.ManyToManyField(Ingredient, through='IngredientRecipe',
                                         verbose_name='Ингредиенты')
     in_favorites = models.ManyToManyField(User, related_name='favorites',
-                                          verbose_name='избранное',
+                                          verbose_name='Избранное',
                                           blank=True)
     tags = models.ManyToManyField(Tag, verbose_name='Тег',
                                   related_name='recipes')
-    cooking_time = models.IntegerField(verbose_name='Время приготовления')
+    cooking_time = models.PositiveIntegerField(
+        verbose_name='Время приготовления')
     in_basket = models.ManyToManyField(User, related_name='basket',
-                                       verbose_name='корзина покупок',
+                                       verbose_name='Корзина покупок',
                                        blank=True)
     pub_date = models.DateTimeField('date published', auto_now_add=True)
 

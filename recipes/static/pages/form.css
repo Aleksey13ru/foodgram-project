@@ -1,4 +1,4 @@
-/*@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&display=swap');
 
 
 @import "../vendor/normalize.css";
@@ -28,6 +28,7 @@
 @import "../blocks/form/form.css";
 @import "../blocks/form/__label/form__label.css";
 @import "../blocks/form/__input/form__input.css";
+@import "../blocks/form/__input/_quantity/form__input_quantity.css";
 @import "../blocks/form/__error/form__error.css";
 @import "../blocks/form/__input-info/form__input-info.css";
 @import "../blocks/form/__group/form__group.css";
@@ -76,4 +77,9 @@
 html,
 body {
     min-height: 100%;
+}
+
+.errorlist {
+  padding: 0;
+  list-style-type: none;
 }

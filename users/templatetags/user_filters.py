@@ -35,31 +35,13 @@ def is_following(author_id, user):
 
 
 @register.filter
-def is_tags(request, tag_id):
-    new_request = request.GET.copy()
-    tags = new_request.getlist('tag')
-    if tag_id in tags:
-        tags.remove(tag_id)
-    else:
-        tags.append(tag_id)
+def tags_filter(tags_list, tag):
+    if tags_list:
+        new_list = tags_list.copy()
+        if tag in tags_list:
+            new_list.remove(str(tag))
+        else:
+            new_list.append(str(tag))
+        return new_list
+    return tags_list
 
-    new_request.setlist('tag', tags)
-    return new_request.urlencode()
-
-
-@register.simple_tag
-def set_tags(request, tags, value):
-    """Устанавливает get параметры в зависимости
-    от выбранных тегов"""
-    pass
-    # request_object = request.GET.copy()
-    # if request.GET.get(value):
-    #     request_object.pop(value)
-    # elif value in tags:
-    #     for tag in tags:
-    #         if tag != value:
-    #             request_object[tag] = "tag"
-    # else:
-    #     request_object[value] = "tag"
-    #
-    # return request_object.urlencode()
