@@ -5,7 +5,11 @@ User = get_user_model()
 
 
 class Tag(models.Model):
-    name = models.CharField(max_length=50, unique=True)
+    name = models.CharField(max_length=50, unique=True, verbose_name='Название')
+
+    class Meta:
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
 
     def __str__(self):
         return self.name
@@ -16,6 +20,10 @@ class Ingredient(models.Model):
                              verbose_name='Название')
     dimension = models.CharField(max_length=64,
                                  verbose_name='Единицы измерения')
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
         return f'{self.title}, {self.dimension}'
@@ -41,7 +49,12 @@ class Recipe(models.Model):
     in_basket = models.ManyToManyField(User, related_name='basket',
                                        verbose_name='Корзина покупок',
                                        blank=True)
-    pub_date = models.DateTimeField('date published', auto_now_add=True)
+    pub_date = models.DateTimeField('date published', auto_now_add=True,)
+
+    class Meta:
+        ordering = ('-pub_date',)
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
 
     def __str__(self):
         return self.title
@@ -49,7 +62,13 @@ class Recipe(models.Model):
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(Ingredient, on_delete=models.CASCADE,
-                                   related_name='ingredient_recipe')
+                                   related_name='ingredient_recipe',
+                                   verbose_name='Ингредиенты')
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE,
-                               related_name='recipe_ingredient')
-    value = models.IntegerField()
+                               related_name='recipe_ingredient',
+                               verbose_name='Рецепты')
+    value = models.IntegerField(verbose_name='Количество')
+
+    class Meta:
+        verbose_name = 'ингредиент в рецепте'
+        verbose_name_plural = 'ингредиенты в рецептах'

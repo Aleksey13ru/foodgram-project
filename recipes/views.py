@@ -5,41 +5,20 @@ from django.http import FileResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+
 from reportlab.pdfgen import canvas
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 
 from .models import Recipe, Ingredient, IngredientRecipe, User
 from .forms import RecipeForm
-
-
-def get_tags(request):
-    """ Получаем теги """
-    all_tags = ['breakfast', 'lunch', 'dinner']
-    tags = []
-    for tag in all_tags:
-        if request.GET.get(tag) == 'True':
-            tags.append(tag)
-    if not tags:
-        tags = all_tags
-    return tags
-
-
-def get_ingredients(request):
-    """ Получаем ингредиенты"""
-    ingredients = {}
-    for key, name in request.POST.items():
-        if 'nameIngredient' in key:
-            _ = key.split('_')
-            ingredients[name] = int(request.POST[f'valueIngredient_{_[1]}'])
-    return ingredients
+from .utils import *
 
 
 def index(request):
     """Главная страница"""
     tags = get_tags(request)
-    recipe_list = Recipe.objects.filter(tags__name__in=tags).\
-        order_by('-pub_date').distinct()
+    recipe_list = Recipe.objects.filter(tags__name__in=tags).distinct()
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -52,8 +31,8 @@ def profile(request, username):
     """Профиль автора"""
     tags = get_tags(request)
     author = get_object_or_404(User, username=username)
-    recipe_records = Recipe.objects.filter(author=author, tags__name__in=tags).\
-        order_by('-pub_date').distinct()
+    recipe_records = (Recipe.objects.filter(author=author, tags__name__in=tags).
+                      distinct())
     paginator = Paginator(recipe_records, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -131,7 +110,7 @@ def favorites_recipe(request):
     """Функция страницы, куда будут выведены рецепты,
     которые текущий пользователь добавил в избранное"""
     tags = get_tags(request)
-    recipe_list = request.user.favorites.filter(tags__name__in=tags).distinct()
+    recipe_list = request.user.favorites.filter(tags__name__in=tags)
     paginator = Paginator(recipe_list, 6)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -143,7 +122,7 @@ def favorites_recipe(request):
 def my_follow(request):
     """Функция страницы, куда будут выведены авторы,
     на которых подписался текущий пользователь"""
-    my_follow_list = request.user.follow.all().order_by('-authors').distinct()
+    my_follow_list = request.user.follow.all()
     paginator = Paginator(my_follow_list, 3)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -161,23 +140,12 @@ def shopping_list(request):
 @login_required
 def shopping_list_download(request):
     """Функция для выгрузки pdf файла списка ингредиентов"""
-    ingredients = request.user.basket.order_by('ingredient__title').\
-        values('ingredient__title', 'ingredient__dimension').\
-        annotate(amount=Sum('recipe_ingredient__value')).all()
-
-    ingredients_list = []
-    for ingredient in ingredients:
-        string = (f'{ingredient["ingredient__title"]} '
-                  f'({ingredient["ingredient__dimension"]}) '
-                  f'— {ingredient["amount"]}')
-        ingredients_list.append(string)
-
     buffer = io.BytesIO()
     pdfmetrics.registerFont(TTFont('FreeSans', 'FreeSans.ttf'))
     p = canvas.Canvas(buffer)
     p.setFont('FreeSans', 12)
     y = 800
-    for line in ingredients_list:
+    for line in ingredients_for_pdf(request):
         p.drawString(50, y, line)
         y -= 10
     p.showPage()
@@ -188,8 +156,8 @@ def shopping_list_download(request):
 
 
 def page_not_found(request, exception):
-    return render(request, "404.html", {"path": request.path}, status=404)
+    return render(request, '404.html', {"path": request.path}, status=404)
 
 
 def server_error(request):
-    return render(request, "500.html", status=500)
+    return render(request, '500.html', status=500)

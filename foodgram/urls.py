@@ -30,5 +30,5 @@ if settings.DEBUG:
                           document_root=settings.MEDIA_ROOT)
     urlpatterns += path('__debug__/', include(debug_toolbar.urls)),
 
-handler404 = "recipes.views.page_not_found" # noqa
-handler500 = "recipes.views.server_error" # noqa
+handler404 = 'recipes.views.page_not_found' # noqa
+handler500 = 'recipes.views.server_error' # noqa
