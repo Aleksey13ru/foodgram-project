@@ -1,0 +1,14 @@
+# Ignore everything
+**
+
+# Allowed
+!api/
+!foodgram/
+!recipes/
+!users/
+!static
+!templates
+!tests
+!.env.templates
+!manage.py
+!requirements.txt

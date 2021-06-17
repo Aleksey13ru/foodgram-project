@@ -15,7 +15,7 @@ ALLOWED_HOSTS = ['localhost',
                  '127.0.0.1',
                  '[::1]',
                  'testserver',
-                 '130.193.54.174',
+                 '130.193.54.151',
                  'skynet-2021.tk',
                  'www.skynet-2021.tk', ]
 
