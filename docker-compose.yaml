@@ -15,7 +15,7 @@ services:
       - ./.env
     
   web:
-    image: aleksey13ru/foodgram:v.17.06.2021
+    image: aleksey13ru/foodgram:v.21.06.2021
     #container_name: web_app
     restart: unless-stopped
     depends_on:
