@@ -36,12 +36,12 @@ def is_following(author_id, user):
 
 @register.filter
 def tags_filter(tags_list, tag):
-    if tags_list:
-        new_list = tags_list.copy()
-        if tag in tags_list:
-            new_list.remove(str(tag))
-        else:
-            new_list.append(str(tag))
-        return new_list
-    return tags_list
+    # if tags_list:
+    new_list = tags_list.copy()
+    if tag in tags_list:
+        new_list.remove(str(tag))
+    else:
+        new_list.append(str(tag))
+    return new_list
+    # return tags_list
 

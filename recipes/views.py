@@ -19,7 +19,7 @@ def index(request):
     """Главная страница"""
     tags = get_tags(request)
     recipe_list = Recipe.objects.filter(tags__name__in=tags).distinct()
-    paginator = Paginator(recipe_list, 6)
+    paginator = Paginator(recipe_list, PAGINATOR_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/indexAuth.html', {'page': page,
@@ -33,7 +33,7 @@ def profile(request, username):
     author = get_object_or_404(User, username=username)
     recipe_records = (Recipe.objects.filter(author=author, tags__name__in=tags).
                       distinct())
-    paginator = Paginator(recipe_records, 6)
+    paginator = Paginator(recipe_records, PAGINATOR_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/authorRecipe.html',
@@ -111,7 +111,7 @@ def favorites_recipe(request):
     которые текущий пользователь добавил в избранное"""
     tags = get_tags(request)
     recipe_list = request.user.favorites.filter(tags__name__in=tags)
-    paginator = Paginator(recipe_list, 6)
+    paginator = Paginator(recipe_list, PAGINATOR_PER_PAGE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     return render(request, 'recipes/favorite.html', {'page': page,
