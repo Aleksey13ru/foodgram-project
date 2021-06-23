@@ -11,4 +11,4 @@ class Command(BaseCommand):
             file_reader = csv.reader(file)
             for row in file_reader:
                 name, unit = row
-                Ingredient.objects.get_or_create(name=name, unit=unit)
+                Ingredient.objects.get_or_create(title=name, dimension=unit)
