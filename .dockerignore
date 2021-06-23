@@ -12,3 +12,4 @@
 !.env.templates
 !manage.py
 !requirements.txt
+!dump.json
