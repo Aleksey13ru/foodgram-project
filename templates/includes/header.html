@@ -9,7 +9,9 @@
                         <li class="nav__item {% if 'new_recipe' in url_name %}nav__item_active{% endif %}"><a href="{% url 'new_recipe' %}" class="nav__link link">Создать рецепт</a></li>
                         <li class="nav__item {% if 'favorite' in url_name %}nav__item_active{% endif %}"><a href="{% url 'favorite' %}" class="nav__link link">Избранное</a></li>
                         <li class="nav__item {% if 'shopping_list' in url_name %}nav__item_active{% endif %}"><a href="{% url 'shopping_list' %}" class="nav__link link">Список покупок</a>
-                            {% if user.basket.count > 0 %}<span class="badge badge_style_blue nav__badge" id="counter">{{ user.basket.count }}</span>{% endif %}</li>
+                            {% if user.basket.count > 0 %}<span class="badge badge_style_blue nav__badge" id="counter" style="display: block;">{{ user.basket.count }}</span>
+                            {% else %}<span class="badge badge_style_blue nav__badge" id="counter" style="display: none;"></span>
+                            {% endif %}</li>
                     {% endif %}
                 {% endwith %}
             </ul>

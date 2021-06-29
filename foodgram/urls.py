@@ -14,8 +14,8 @@ urlpatterns = [
     path('about-spec/', views.flatpage,
          {'url': '/about-spec/'}, name='about-spec'),
     path('admin/', admin.site.urls),
-    path('auth/', include('users.urls')),
     path('api/v1/', include('api.urls')),
+    path('auth/', include('users.urls')),
     path('', include('recipes.urls')),
 ]
 
