@@ -14,13 +14,15 @@
             {% include "includes/tags.html" %}
         </div>
 
-        <div class="author-subscribe" data-author="{{ author.id }}">
-            {% if recipe.author.id|is_following:user %}
-                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Отписаться от автора</button></p>
-            {% else %}
-                <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
-            {% endif %}
-        </div>
+        {% if user.is_authenticated and author != user %}
+            <div class="author-subscribe" data-author="{{ author.id }}">
+                {% if recipe.author.id|is_following:user %}
+                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Отписаться от автора</button></p>
+                {% else %}
+                    <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></p>
+                {% endif %}
+            </div>
+        {% endif %}
 
         <div class="card-list" >
             {% for recipe in page %}

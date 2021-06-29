@@ -35,3 +35,20 @@ def ingredients_for_pdf(request):
                   f'— {ingredient["amount"]}')
         ingredients_list.append(string)
     return ingredients_list
+
+
+def check_ingredients_value(ingredients):
+    """Проверка на то, что количество всех ингредиентов больше 0"""
+    for ing_amount in ingredients.values():
+        if int(ing_amount) <= 0:
+            return True
+        return False
+
+
+def validate_ingredients(form, ingredients):
+    """Валидация ингредиентов"""
+    if check_ingredients_value(ingredients):
+        context = {'form': form,
+                   'ingr_error':
+                       'Вы ввели отрицательное число ингредиентов'}
+        return context

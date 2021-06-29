@@ -6,3 +6,9 @@ class User(AbstractUser):
     follow = models.ManyToManyField(
         'self', blank=True, symmetrical=False, related_name='follower',
     )
+
+
+class AnonymousUser:
+    follow = models.ManyToManyField(
+        'self', blank=True, symmetrical=False, related_name='follower',
+    )

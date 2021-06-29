@@ -48,8 +48,15 @@ def profile(request, username):
 def new_recipe(request):
     """Функция для создания рецепта"""
     form = RecipeForm(request.POST or None, files=request.FILES or None)
-    ingredients = get_ingredients(request)
+    # ingredients = get_ingredients(request)
+    # context = validate_ingredients(form, ingredients)
+    # if context:
+    #     return render(request, 'recipes/formRecipe.html', context)
     if form.is_valid():
+        ingredients = get_ingredients(request)
+        context = validate_ingredients(form, ingredients)
+        if context:
+            return render(request, 'recipes/formRecipe.html', context)
         recipe = form.save(commit=False)
         recipe.author = request.user
         recipe.save()

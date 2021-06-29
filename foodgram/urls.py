@@ -7,9 +7,10 @@ from django.conf.urls import handler404, handler500
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('about/', include('django.contrib.flatpages.urls')),
     path('auth/', include('users.urls')),
     path('api/v1/', include('api.urls')),
-    path('about/', include('django.contrib.flatpages.urls')),
+    # path('about/', include('django.contrib.flatpages.urls')),
     path('', include('recipes.urls')),
 ]
 

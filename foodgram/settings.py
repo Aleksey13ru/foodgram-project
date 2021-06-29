@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware'
 ]
 
@@ -74,18 +75,18 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 DATABASES = {
-    'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME', default='123'),
-            'USER': os.environ.get('POSTGRES_USER', default='123'),
-            'PASSWORD': os.environ.get('POSTGRES_PASSWORD', default='123'),
-            'HOST': os.environ.get('DB_HOST', default='localhost'),
-            'PORT': os.environ.get('DB_PORT', default=5432),
-    }
     # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'NAME': os.environ.get('DB_NAME', default='123'),
+    #         'USER': os.environ.get('POSTGRES_USER', default='123'),
+    #         'PASSWORD': os.environ.get('POSTGRES_PASSWORD', default='123'),
+    #         'HOST': os.environ.get('DB_HOST', default='localhost'),
+    #         'PORT': os.environ.get('DB_PORT', default=5432),
     # }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 
 AUTH_USER_MODEL = 'users.User'
@@ -121,8 +122,22 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
-EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+# EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails')
+
+# EMAIL_HOST = {'EMAIL_HOST': os.environ.get('EMAIL_HOST')}
+# EMAIL_PORT = {'EMAIL_PORT': os.environ.get('EMAIL_PORT')}
+# EMAIL_HOST_USER = {'EMAIL_HOST_USER': os.environ.get('EMAIL_HOST_USER')}
+# EMAIL_HOST_PASSWORD = {'EMAIL_HOST_PASSWORD': os.environ.get('EMAIL_HOST_PASSWORD')}
+# EMAIL_USE_SSL = {'EMAIL_USE_SSL': os.environ.get('EMAIL_USE_SSL')}
+
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'terminator1339@yandex.ru'
+EMAIL_HOST_PASSWORD = 'uLe-z5p-gSy-k9i'
+EMAIL_USE_SSL = True
+SERVER_EMAIL = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 SITE_ID = 1
 
@@ -131,12 +146,3 @@ LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'index'
 
 PAGINATOR_PER_PAGE = 6
-
-REST_FRAMEWORK = {
-        'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-        ],
-        'DEFAULT_AUTHENTICATION_CLASSES': [
-            'rest_framework.authentication.BasicAuthentication',
-        ]
-    }
