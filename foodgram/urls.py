@@ -8,20 +8,26 @@ from django.conf.urls import handler404, handler500
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('about/', include('django.contrib.flatpages.urls')),
-    path('auth/', include('users.urls')),
-    path('api/v1/', include('api.urls')),
-    # path('about/', include('django.contrib.flatpages.urls')),
-    path('', include('recipes.urls')),
-]
-
-urlpatterns += [
     path('about-term/', views.flatpage,
          {'url': '/about-term/'}, name='about-term'),
     path('about-author/', views.flatpage,
          {'url': '/about-author/'}, name='about-author'),
     path('about-spec/', views.flatpage,
          {'url': '/about-spec/'}, name='about-spec'),
+    path('auth/', include('users.urls')),
+    path('api/v1/', include('api.urls')),
+    # path('about/', include('django.contrib.flatpages.urls')),
+    path('', include('recipes.urls')),
 ]
+
+# urlpatterns += [
+#     path('about-term/', views.flatpage,
+#          {'url': '/about-term/'}, name='about-term'),
+#     path('about-author/', views.flatpage,
+#          {'url': '/about-author/'}, name='about-author'),
+#     path('about-spec/', views.flatpage,
+#          {'url': '/about-spec/'}, name='about-spec'),
+# ]
 
 if settings.DEBUG:
     import debug_toolbar
