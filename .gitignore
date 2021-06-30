@@ -5,5 +5,7 @@ media
 static
 venv
 db.sqlite3
-ingredients.zip
 .env
+.gitignore
+dump.json
+ingredients.zip

@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from recipes.utils import validate_even
+
 User = get_user_model()
 
 
@@ -45,7 +47,7 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(Tag, verbose_name='Тег',
                                   related_name='recipes')
     cooking_time = models.PositiveIntegerField(
-        verbose_name='Время приготовления')
+        verbose_name='Время приготовления', validators=[validate_even])
     in_basket = models.ManyToManyField(User, related_name='basket',
                                        verbose_name='Корзина покупок',
                                        blank=True)

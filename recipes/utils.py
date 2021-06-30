@@ -1,4 +1,6 @@
 from django.db.models import Sum
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 def get_tags(request):
@@ -45,10 +47,30 @@ def check_ingredients_value(ingredients):
         return False
 
 
+def check_ingredients(ingredients):
+    """Проверка, что передан хотябы 1 ингредиент"""
+    if len(ingredients) == 0:
+        return True
+    return False
+
+
 def validate_ingredients(form, ingredients):
     """Валидация ингредиентов"""
     if check_ingredients_value(ingredients):
         context = {'form': form,
                    'ingr_error':
-                       'Вы ввели отрицательное число ингредиентов'}
+                       'Количество ингредиентов должно быть больше 0'}
         return context
+
+    if check_ingredients(ingredients):
+        context = {'form': form,
+                   'ingr_error': 'Нет ингредиентов'}
+        return context
+
+
+def validate_even(value):
+    if value <= 0:
+        raise ValidationError(
+            _('Значение должно быть больше 0'),
+            params={'value': value},
+        )

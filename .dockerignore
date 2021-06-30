@@ -8,8 +8,6 @@
 !users/
 !static
 !templates
-!tests
-!.env.templates
 !manage.py
 !requirements.txt
 !FreeSans.ttf
