@@ -69,8 +69,8 @@ def validate_ingredients(form, ingredients):
 
 
 def validate_even(value):
-    if value <= 0:
+    if value < 1:
         raise ValidationError(
-            _('Значение должно быть больше 0'),
+            _('Значение должно быть больше 1'),
             params={'value': value},
         )

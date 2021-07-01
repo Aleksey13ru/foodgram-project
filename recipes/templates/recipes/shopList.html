@@ -33,7 +33,7 @@
                 {% endfor %}
 
             </ul>
-            <a href="{% url 'shopping_list_download' %}"><button class="button button_style_blue">Скачать список</button></a>
+            {% if user.basket.count > 0 %}<a href="{% url 'shopping_list_download' %}"><button class="button button_style_blue">Скачать список</button></a>{% endif %}
         </div>
     </main>
 {% endblock %}
